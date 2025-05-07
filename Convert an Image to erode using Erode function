@@ -1,0 +1,27 @@
+import cv2
+import numpy as np
+
+# Read the image
+image_path = 'Hareesh.jpg'  # Replace 'your_image.jpg' with the actual path to your image
+img = cv2.imread(image_path)
+
+# Check if the image was loaded successfully
+if img is None:
+    print(f"Error: Could not open or find the image at '{image_path}'")
+else:
+    # Define the kernel for erosion (a small matrix used for the operation)
+    # You can adjust the size and shape of the kernel
+    kernel = np.ones((5, 5), np.uint8)
+
+    # Perform erosion
+    erosion = cv2.erode(img, kernel, iterations=1)
+
+    # Display the original and eroded images
+    cv2.imshow('Original Image', img)
+    cv2.imshow('Eroded Image', erosion)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+    # Optionally, save the eroded image
+    cv2.imwrite('eroded_image.jpg', erosion)
+    print("Eroded image saved as 'eroded_image.jpg'") 
