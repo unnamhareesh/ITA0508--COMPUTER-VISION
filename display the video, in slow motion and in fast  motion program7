@@ -1,0 +1,66 @@
+import cv2
+import os
+
+# Load the video file
+video_path = r'C:\Users\sahit\OneDrive\Desktop\computer vision lab\WhatsApp Video 2025-05-02 at 16.17.41_ee94a47e.mp4'
+cap = cv2.VideoCapture(video_path)
+
+# Check if video opened successfully
+if not cap.isOpened():
+    print("Error: Cannot open video file.")
+    exit()
+
+# Get video properties
+fps = cap.get(cv2.CAP_PROP_FPS)
+width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+frame_size = (width, height)
+print(f"Original FPS: {fps}, Resolution: {frame_size}")
+
+# Output directory
+output_dir = os.path.dirname(video_path)
+
+# Define a function to display and optionally save video at a custom speed
+def play_and_save_video(speed=0.2, label="Normal Speed", save=False):
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Restart video
+    delay = int(1000 / (fps * speed))  # Playback delay
+
+    # Define the output video writer if saving is enabled
+    if save:
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # or 'XVID'
+        output_path = os.path.join(output_dir, f"{label.replace(' ', '_')}.mp4")
+        out = cv2.VideoWriter(output_path, fourcc, fps * speed, frame_size)
+        print(f"Saving to: {output_path}")
+    else:
+        out = None
+
+    print(f"\nPlaying video: {label}")
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        cv2.imshow(f"{label}", frame)
+        if save:
+            out.write(frame)
+
+        if cv2.waitKey(delay) & 0xFF == ord('q'):
+            break
+
+    if save:
+        out.release()
+        print(f"{label} saved successfully.")
+    cv2.destroyWindow(f"{label}")
+
+# Play video at normal speed (no saving)
+play_and_save_video(speed=1.0, label="Normal Speed", save=False)
+
+# Play and save slow motion video (0.5x speed)
+play_and_save_video(speed=0.5, label="Slow Motion", save=True)
+
+# Play and save fast motion video (2x speed)
+play_and_save_video(speed=2.0, label="Fast Motion", save=True)
+
+# Release everything
+cap.release()
+cv2.destroyAllWindows()
