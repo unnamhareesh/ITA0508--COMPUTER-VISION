@@ -1,0 +1,25 @@
+import cv2
+
+# Load the image
+image = cv2.imread('Hareesh.jpg')
+
+# Display the original image
+cv2.imshow('Original Image', image)
+
+# Define the Region of Interest (ROI) manually: (startY:endY, startX:endX)
+# For example, selecting a rectangle from (x=100, y=50) to (x=200, y=150)
+x_start, y_start = 100, 50
+x_end, y_end = 200, 150
+roi = image[y_start:y_end, x_start:x_end]
+
+# Show the cropped ROI
+cv2.imshow('Cropped ROI', roi)
+
+# Paste the ROI into a different part of the image (top-left corner as example)
+image[0:roi.shape[0], 0:roi.shape[1]] = roi
+
+# Show the modified image
+cv2.imshow('Modified Image with Pasted ROI', image)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
